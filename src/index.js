@@ -3,7 +3,7 @@ import Chaos from './Chaos';
 
 const element = (
   <div>
-    <h1>Hello World</h1>
+    <h1 style={{ background: 'salmon' }}>Hello World</h1>
     <h2>from chaos</h2>
   </div>
 );

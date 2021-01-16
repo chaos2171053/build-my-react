@@ -29,17 +29,20 @@ function render(element, container) {
     Object.keys(element.props)
       .filter(isProperty)
       .forEach(name => {
+        // TODO: add elment style
         dom[name] = element.props[name];
+        console.log(dom[name]);
+        dom.style.background = 'red';
       });
   }
   if (element.props) {
     const children = element.props.children;
-
     if (isArray(children)) {
       children.forEach(child => render(child, dom));
     } else if (isObject(children)) {
       render(children.props.children, dom);
     } else if (typeof children === 'string') {
+      // text node
       render(children, dom);
     }
   }

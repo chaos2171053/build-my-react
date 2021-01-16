@@ -39,6 +39,8 @@ function render(element, container) {
       children.forEach(child => render(child, dom));
     } else if (isObject(children)) {
       render(children.props.children, dom);
+    } else if (typeof children === 'string') {
+      render(children, dom);
     }
   }
 

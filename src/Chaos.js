@@ -1,11 +1,12 @@
 import { isArray, isObject } from './utils';
 
 let nextUnitOfWork = null;
+const TEXT_ELEMENT = 'TEXT_ELEMENT';
 
 
 function createTextElement(text) {
   return {
-    type: "TEXT_ELEMENT",
+    type: TEXT_ELEMENT,
     props: {
       nodeValue: text,
       children: []
@@ -64,29 +65,47 @@ function performUnitOfWork(fiber) {
   }
 
   // create new fibers
-  const elements = fiber.props.children;
-  let index = 0;
-  let prevSibling = null;
+  if (fiber.props) {
+    const elements = fiber.props.children;
 
-  while (index < elements.length) {
-    const element = elements[index];
-
-    const newFiber = {
-      type: element.type,
-      props: element.props,
-      parent: fiber,
-      dom: null,
-    };
-    // fiber 与 第一个子节点建立连接
-    if (index === 0) {
-      fiber.child = newFiber;
-    } else {
-      prevSibling.sibling = newFiber;
+    // 处理文字节点
+    if (typeof elements === 'string') {
+      fiber.child = {
+        type: TEXT_ELEMENT,
+        props: null,
+        parent: fiber,
+        dom: null,
+      };
     }
-    // 第一个子节点是其他子节点的兄弟节点
-    prevSibling = newFiber;
-    index++;
+
+    if (isArray(elements)) {
+      let index = 0;
+      let prevSibling = null;
+
+      while (index < elements.length) {
+        const element = elements[index];
+
+        const newFiber = {
+          type: element.type,
+          props: element.props,
+          parent: fiber,
+          dom: null,
+        };
+        // fiber 与 第一个子节点建立连接
+        if (index === 0) {
+          fiber.child = newFiber;
+        } else {
+          prevSibling.sibling = newFiber;
+        }
+        // 第一个子节点是其他子节点的兄弟节点
+        prevSibling = newFiber;
+        index++;
+      }
+    }
+
   }
+
+
   //  return next unit of work
 
   // 如果有子节点，则把第一个子节点作为下一个 unit work
@@ -108,7 +127,7 @@ function performUnitOfWork(fiber) {
 
 function createDom(fiber) {
   const dom =
-    (typeof fiber === 'string' || fiber.type === "TEXT_ELEMENT")
+    (typeof fiber === 'string' || fiber.type === TEXT_ELEMENT)
       ? document.createTextNode(fiber)
       : document.createElement(fiber.type);
 

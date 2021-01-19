@@ -59,7 +59,6 @@ function performUnitOfWork(fiber) {
   if (!fiber.dom) {
     fiber.dom = createDom(fiber);
   }
-
   if (fiber.parent) {
     fiber.parent.dom.appendChild(fiber.dom);
   }
@@ -70,12 +69,13 @@ function performUnitOfWork(fiber) {
 
     // 处理文字节点
     if (typeof elements === 'string') {
-      fiber.child = {
-        type: TEXT_ELEMENT,
-        props: null,
-        parent: fiber,
-        dom: null,
-      };
+      // BUG：txt node
+      // fiber.child = {
+      //   type: TEXT_ELEMENT,
+      //   props: { children: elements },
+      //   parent: fiber,
+      //   dom: null,
+      // };
     }
 
     if (isArray(elements)) {
@@ -126,10 +126,14 @@ function performUnitOfWork(fiber) {
 }
 
 function createDom(fiber) {
-  const dom =
-    (typeof fiber === 'string' || fiber.type === TEXT_ELEMENT)
-      ? document.createTextNode(fiber)
-      : document.createElement(fiber.type);
+  let dom = null;
+  if (typeof fiber === 'string' || fiber.type === TEXT_ELEMENT) {
+    if (fiber.props && fiber.props.children) {
+      dom = document.createTextNode(fiber.props.children);
+    }
+  } else {
+    dom = document.createElement(fiber.type);
+  }
 
   const isProperty = key => key !== "children";
   if (isObject(fiber.props)) {

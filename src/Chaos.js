@@ -24,35 +24,12 @@ function createElement(type, props, ...children) {
   };
 }
 function render(element, container) {
-  const dom =
-    (typeof element === 'string' || element.type === "TEXT_ELEMENT")
-      ? document.createTextNode(element)
-      : document.createElement(element.type);
-  const isProperty = key => key !== "children";
-  if (isObject(element.props)) {
-    Object.keys(element.props)
-      .filter(isProperty)
-      .forEach(name => {
-        // TODO: add elment style
-        dom[name] = element.props[name];
-        // console.log(dom[name]);
-        // dom.style.background = 'red';
-      });
-  }
-  if (element.props) {
-    const children = element.props.children;
-    if (isArray(children)) {
-      children.forEach(child => render(child, dom));
-    } else if (isObject(children)) {
-      render(children.props.children, dom);
-    } else if (typeof children === 'string') {
-      // text node
-      render(children, dom);
-    }
-  }
-
-
-  container.appendChild(dom);
+  nextUnitOfWork = {
+    dom: container,
+    props: {
+      children: [element],
+    },
+  };
 }
 
 function workLoop(deadline) {
@@ -77,9 +54,31 @@ function workLoop(deadline) {
 }
 
 function performUnitOfWork(nextUnitOfWork) {
-  // TODO
+  // TODO add dom node
+  // TODO create new fibers
+  // TODO return next unit of work
 }
 
+function createDom(fiber) {
+  const dom =
+    (typeof fiber === 'string' || fiber.type === "TEXT_ELEMENT")
+      ? document.createTextNode(fiber)
+      : document.createElement(fiber.type);
+
+  const isProperty = key => key !== "children";
+  if (isObject(fiber.props)) {
+    Object.keys(fiber.props)
+      .filter(isProperty)
+      .forEach(name => {
+        // TODO: add elment style
+        dom[name] = fiber.props[name];
+      });
+  }
+
+  return dom;
+}
+
+//  when the browser is ready,call the requestIdleCallback
 requestIdleCallback(workLoop);
 
 const Chaos = {

@@ -1,4 +1,8 @@
 import { isArray, isObject } from './utils';
+
+let nextUnitOfWork = null;
+
+
 function createTextElement(text) {
   return {
     type: "TEXT_ELEMENT",
@@ -31,8 +35,8 @@ function render(element, container) {
       .forEach(name => {
         // TODO: add elment style
         dom[name] = element.props[name];
-        console.log(dom[name]);
-        dom.style.background = 'red';
+        // console.log(dom[name]);
+        // dom.style.background = 'red';
       });
   }
   if (element.props) {
@@ -51,6 +55,32 @@ function render(element, container) {
   container.appendChild(dom);
 }
 
+function workLoop(deadline) {
+  let shouldYield = false;
+  while (nextUnitOfWork && !shouldYield) {
+    nextUnitOfWork = performUnitOfWork(
+      nextUnitOfWork
+    );
+    // evnet loop 是否闲置
+    // 1. https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
+    // 2. https://developer.mozilla.org/en-US/docs/Web/API/IdleDeadline
+    // 3. https://developer.mozilla.org/en-US/docs/Web/API/Background_Tasks_API
+    // 4. https://developer.mozilla.org/en-US/docs/Web/API/IdleDeadline/timeRemaining
+    // 5. https://developer.mozilla.org/en-US/docs/Web/API/IdleDeadline/didTimeout
+
+
+    // If the idle period is over, the value is 0. 
+    //Your callback can call this repeatedly to see if there's enough time left to do more work before returning
+    shouldYield = deadline.timeRemaining() < 1;
+  }
+  requestIdleCallback(workLoop);
+}
+
+function performUnitOfWork(nextUnitOfWork) {
+  // TODO
+}
+
+requestIdleCallback(workLoop);
 
 const Chaos = {
   createElement,

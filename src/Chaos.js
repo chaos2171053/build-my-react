@@ -62,20 +62,16 @@ function performUnitOfWork(fiber) {
   if (fiber.parent) {
     fiber.parent.dom.appendChild(fiber.dom);
   }
-
-  // create new fibers
   if (fiber.props) {
     const elements = fiber.props.children;
 
     // 处理文字节点
     if (typeof elements === 'string') {
-      // BUG：txt node
-      // fiber.child = {
-      //   type: TEXT_ELEMENT,
-      //   props: { children: elements },
-      //   parent: fiber,
-      //   dom: null,
-      // };
+      fiber.child = {
+        ...createTextElement(elements),
+        parent: fiber,
+        dom: null,
+      };
     }
 
     if (isArray(elements)) {

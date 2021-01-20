@@ -183,9 +183,6 @@ function reconcileChildren(wipFiber, elements) {
 
       // compare oldFiber to element
 
-      if (oldFiber) {
-        oldFiber = oldFiber.sibling;
-      }
       const sameType =
         oldFiber &&
         element &&
@@ -218,6 +215,9 @@ function reconcileChildren(wipFiber, elements) {
         oldFiber.effectTag = "DELETION";
         deletions.push(oldFiber);
       }
+      if (oldFiber) {
+        oldFiber = oldFiber.sibling;
+      }
 
       // fiber 与 第一个子节点建立连接
       if (index === 0) {
@@ -229,12 +229,6 @@ function reconcileChildren(wipFiber, elements) {
       prevSibling = newFiber;
       index++;
     }
-  } else if (isObject(elements)) {
-    wipFiber.child = {
-      ...createElement(elements.type, elements.props),
-      parent: wipFiber,
-      dom: null,
-    };
   }
 }
 
@@ -243,17 +237,15 @@ function performUnitOfWork(fiber) {
   if (!fiber.dom) {
     fiber.dom = createDom(fiber);
   }
-  if (fiber.parent) {
-    fiber.parent.dom.appendChild(fiber.dom);
-  }
   if (fiber.props) {
     const elements = fiber.props.children;
-    reconcileChildren(fiber, elements);
+    if (isObject(elements)) {
+      reconcileChildren(fiber, [elements]);
+    } else {
+      reconcileChildren(fiber, elements);
+    }
   }
-
-
   //  return next unit of work
-
   // 如果有子节点，则把第一个子节点作为下一个 unit work
   if (fiber.child) {
     return fiber.child;

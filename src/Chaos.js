@@ -168,67 +168,62 @@ function reconcileChildren(wipFiber, elements) {
   let prevSibling = null;
   // 处理文字节点
   if (typeof elements === 'string') {
-    wipFiber.child = {
-      ...createTextElement(elements),
-      parent: wipFiber,
-      dom: null,
-    };
-  } else if (isArray(elements)) {
-    // iterate at the same time over the children of the old fiber (wipFiber.alternate) 
-    // and the array of elements we want to reconcile
-    while (index < elements.length || oldFiber != null) {
-      const element = elements[index];
+    elements = [createTextElement(elements)];
+  }
+  // iterate at the same time over the children of the old fiber (wipFiber.alternate) 
+  // and the array of elements we want to reconcile
+  while (index < elements.length || oldFiber != null) {
+    const element = elements[index];
 
-      let newFiber = null;
+    let newFiber = null;
 
-      // compare oldFiber to element
+    // compare oldFiber to element
 
-      const sameType =
-        oldFiber &&
-        element &&
-        element.type === oldFiber.type;
+    const sameType =
+      oldFiber &&
+      element &&
+      element.type === oldFiber.type;
 
-      if (sameType) {
-        // update the node
-        newFiber = {
-          type: oldFiber.type,
-          props: element.props,
-          dom: oldFiber.dom,
-          parent: wipFiber,
-          alternate: oldFiber,
-          effectTag: "UPDATE",
-        };
-      }
-      if (element && !sameType) {
-        // add this node
-        newFiber = {
-          type: element.type,
-          props: element.props,
-          dom: null,
-          parent: wipFiber,
-          alternate: null,
-          effectTag: "PLACEMENT",
-        };
-      }
-      if (oldFiber && !sameType) {
-        // delete the oldFiber's node
-        oldFiber.effectTag = "DELETION";
-        deletions.push(oldFiber);
-      }
-      if (oldFiber) {
-        oldFiber = oldFiber.sibling;
-      }
-
-      // fiber 与 第一个子节点建立连接
-      if (index === 0) {
-        wipFiber.child = newFiber;
-      } else {
-        prevSibling.sibling = newFiber;
-      }
-      // 关联兄弟节点
-      prevSibling = newFiber;
-      index++;
+    if (sameType) {
+      // update the node
+      newFiber = {
+        type: oldFiber.type,
+        props: element.props,
+        dom: oldFiber.dom,
+        parent: wipFiber,
+        alternate: oldFiber,
+        effectTag: "UPDATE",
+      };
     }
+    if (element && !sameType) {
+      // add this node
+      newFiber = {
+        type: element.type,
+        props: element.props,
+        dom: null,
+        parent: wipFiber,
+        alternate: null,
+        effectTag: "PLACEMENT",
+      };
+    }
+    if (oldFiber && !sameType) {
+      // delete the oldFiber's node
+      oldFiber.effectTag = "DELETION";
+      deletions.push(oldFiber);
+    }
+    if (oldFiber) {
+      oldFiber = oldFiber.sibling;
+    }
+
+    // fiber 与 第一个子节点建立连接
+    if (index === 0) {
+      wipFiber.child = newFiber;
+    } else {
+      prevSibling.sibling = newFiber;
+    }
+    // 关联兄弟节点
+    prevSibling = newFiber;
+    index++;
   }
 }
 

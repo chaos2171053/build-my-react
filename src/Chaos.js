@@ -173,9 +173,7 @@ function reconcileChildren(wipFiber, elements) {
       parent: wipFiber,
       dom: null,
     };
-  }
-
-  if (isArray(elements)) {
+  } else if (isArray(elements)) {
     // iterate at the same time over the children of the old fiber (wipFiber.alternate) 
     // and the array of elements we want to reconcile
     while (index < elements.length || oldFiber != null) {
@@ -231,6 +229,12 @@ function reconcileChildren(wipFiber, elements) {
       prevSibling = newFiber;
       index++;
     }
+  } else if (isObject(elements)) {
+    wipFiber.child = {
+      ...createElement(elements.type, elements.props),
+      parent: wipFiber,
+      dom: null,
+    };
   }
 }
 

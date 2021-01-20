@@ -1,6 +1,8 @@
 import { isArray, isObject } from './utils';
 
 let nextUnitOfWork = null;
+let wipRoot = null; // the work in progress root
+
 const TEXT_ELEMENT = 'TEXT_ELEMENT';
 
 
@@ -25,12 +27,29 @@ function createElement(type, props, ...children) {
   };
 }
 function render(element, container) {
-  nextUnitOfWork = {
+  // keep track of the root of the fiber tree.
+  wipRoot = {
     dom: container,
     props: {
       children: [element],
     },
   };
+  nextUnitOfWork = wipRoot;
+}
+
+function commitWork(fiber) {
+  if (!fiber) {
+    return;
+  }
+  const domParent = fiber.parent.dom;
+  domParent.appendChild(fiber.dom);
+  commitWork(fiber.child);
+  commitWork(fiber.sibling);
+}
+
+function commitRoot() {
+  commitWork(wipRoot.child);
+  wipRoot = null;
 }
 
 function workLoop(deadline) {

@@ -1,11 +1,19 @@
 import React from 'react';
 import Chaos from './Chaos';
 
-const element = (
-  <div>
-    <h1 style={{ background: 'salmon' }}>Hello World</h1>
-    <h2>from chaos</h2>
-  </div>
-);
+const updateValue = e => {
+  rerender(e.target.value);
+};
 const container = document.getElementById("root");
-Chaos.render(element, container);
+
+const rerender = value => {
+  const element = (
+    <div>
+      <input onInput={updateValue} value={value} />
+      {/* <h2>Hello {value}</h2> */}
+      {/* <h2>Hello</h2> */}
+    </div>
+  );
+  Chaos.render(element, container);
+};
+rerender("World");

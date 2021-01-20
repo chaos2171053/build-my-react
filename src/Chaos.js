@@ -172,6 +172,7 @@ function reconcileChildren(wipFiber, elements) {
   }
   // iterate at the same time over the children of the old fiber (wipFiber.alternate) 
   // and the array of elements we want to reconcile
+  console.log(elements);
   while (index < elements.length || oldFiber != null) {
     const element = elements[index];
 
@@ -234,11 +235,15 @@ function performUnitOfWork(fiber) {
   }
   if (fiber.props) {
     const elements = fiber.props.children;
-    if (isObject(elements)) {
-      reconcileChildren(fiber, [elements]);
-    } else {
-      reconcileChildren(fiber, elements);
+    // 过滤<h2></h2>无子节点元素
+    if (elements) {
+      if (isObject(elements)) {
+        reconcileChildren(fiber, [elements]);
+      } else {
+        reconcileChildren(fiber, elements);
+      }
     }
+
   }
   //  return next unit of work
   // 如果有子节点，则把第一个子节点作为下一个 unit work

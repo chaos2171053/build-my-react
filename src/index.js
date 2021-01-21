@@ -44,10 +44,13 @@ const container = document.getElementById("root");
 
 function Counter() {
   const [state, setState] = Chaos.useState(1);
+  const onClick = () => {
+    setState(c => c + 1);
+  };
   return (
     <div>
       <h1>Count: {state}</h1>
-      <button onClick={() => setState(c => c + 1)}>Click Me</button>
+      <button onClick={onClick}>Click Me</button>
     </div>
   );
 }

@@ -9,9 +9,8 @@ const container = document.getElementById("root");
 const rerender = value => {
   const element = (
     <div>
-      {/* <input onInput={updateValue} value={value} /> */}
-      {/* <h2>Hello {value}</h2> */}
-      <h2>Hello</h2>
+      <input onInput={updateValue} value={value} />
+      <h2>Hello {value}</h2>
     </div>
   );
   Chaos.render(element, container);

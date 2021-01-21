@@ -172,9 +172,12 @@ function reconcileChildren(wipFiber, elements) {
   }
   // iterate at the same time over the children of the old fiber (wipFiber.alternate) 
   // and the array of elements we want to reconcile
-  console.log(elements);
   while (index < elements.length || oldFiber != null) {
-    const element = elements[index];
+    let element = elements[index];
+    // 处理文字节点
+    if (typeof element === 'string') {
+      element = createTextElement(element);
+    }
 
     let newFiber = null;
 

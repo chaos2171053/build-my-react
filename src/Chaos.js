@@ -1,4 +1,4 @@
-import { isArray, isObject } from './utils';
+import { isObject } from './utils';
 
 let nextUnitOfWork = null;
 let currentRoot = null;
@@ -101,12 +101,26 @@ function updateDom(dom, prevProps, nextProps) {
       );
     });
 }
+// we need to keep going until we find a child with a DOM node
+function commitDeletion(fiber, domParent) {
+  if (fiber.dom) {
+    domParent.removeChild(fiber.dom);
+  } else {
+    commitDeletion(fiber.child, domParent);
+  }
+}
 
 function commitWork(fiber) {
   if (!fiber) {
     return;
   }
-  const domParent = fiber.parent.dom;
+  // we nedd to go up the fiber tree until we find a fiber with a DOM node
+  let domParentFiber = fiber.parent;
+  while (!domParentFiber.dom) {
+    domParentFiber = domParentFiber.parent;
+  }
+
+  const domParent = domParentFiber.dom;
   if (
     fiber.effectTag === "PLACEMENT" &&
     fiber.dom != null
@@ -122,7 +136,7 @@ function commitWork(fiber) {
       fiber.props
     );
   } else if (fiber.effectTag === "DELETION") {
-    domParent.removeChild(fiber.dom);
+    commitDeletion(fiber, domParent);
   }
   commitWork(fiber.child);
   commitWork(fiber.sibling);
@@ -231,8 +245,12 @@ function reconcileChildren(wipFiber, elements) {
   }
 }
 
-function performUnitOfWork(fiber) {
-  // add dom node
+function updateFunctionComponent(fiber) {
+  const children = [fiber.type(fiber.props)];
+  reconcileChildren(fiber, children);
+}
+
+function updateHostComponent(fiber) {
   if (!fiber.dom) {
     fiber.dom = createDom(fiber);
   }
@@ -246,8 +264,22 @@ function performUnitOfWork(fiber) {
         reconcileChildren(fiber, elements);
       }
     }
-
   }
+};
+
+function performUnitOfWork(fiber) {
+  // add dom node
+
+
+  const isFunctionComponent =
+    fiber.type instanceof Function;
+  if (isFunctionComponent) {
+    updateFunctionComponent(fiber);
+  } else {
+    updateHostComponent(fiber);
+  }
+
+
   //  return next unit of work
   // 如果有子节点，则把第一个子节点作为下一个 unit work
   if (fiber.child) {

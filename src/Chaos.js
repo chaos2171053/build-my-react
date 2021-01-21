@@ -2,8 +2,11 @@ import { isObject } from './utils';
 
 let nextUnitOfWork = null;
 let currentRoot = null;
-let wipRoot = null; // the work in progress root
+let wipRoot = null; // set the work in progress root
 let deletions = null;
+
+let wipFiber = null; // set the work in progress fiber
+let hookIndex = null; // keep track of the current hook index
 
 
 const isEvent = key => key.startsWith("on");
@@ -78,7 +81,6 @@ function updateDom(dom, prevProps, nextProps) {
     .forEach(name => {
       dom[name] = "";
     });
-
   // Set new or changed properties
   Object.keys(nextProps)
     .filter(isProperty)
@@ -189,7 +191,7 @@ function reconcileChildren(wipFiber, elements) {
   while (index < elements.length || oldFiber != null) {
     let element = elements[index];
     // 处理文字节点
-    if (typeof element === 'string') {
+    if (typeof element === 'string' || typeof element === 'number') {
       element = createTextElement(element);
     }
 
@@ -246,6 +248,9 @@ function reconcileChildren(wipFiber, elements) {
 }
 
 function updateFunctionComponent(fiber) {
+  wipFiber = fiber;
+  hookIndex = 0;
+  wipFiber.hooks = []; // to support calling useState several times in the same component
   const children = [fiber.type(fiber.props)];
   reconcileChildren(fiber, children);
 }
@@ -266,6 +271,43 @@ function updateHostComponent(fiber) {
     }
   }
 };
+
+function useState(initial) {
+  // we check in the alternate of the fiber using the hook index
+  const oldHook =
+    wipFiber.alternate &&
+    wipFiber.alternate.hooks &&
+    wipFiber.alternate.hooks[hookIndex];
+
+  const hook = {
+    state: oldHook ? oldHook.state : initial,
+    queue: [],
+  };
+
+  const actions = oldHook ? oldHook.queue : [];
+
+  actions.forEach(action => {
+    hook.state = action(hook.state);
+  });
+
+  const setState = action => {
+    hook.queue.push(action);
+    // setState 时设置正在工作的节点
+    wipRoot = {
+      dom: currentRoot.dom,
+      props: currentRoot.props,
+      alternate: currentRoot,
+    };
+    nextUnitOfWork = wipRoot;
+    deletions = [];
+  };
+
+  wipFiber.hooks.push(hook);
+
+  hookIndex++;
+
+  return [hook.state, setState];
+}
 
 function performUnitOfWork(fiber) {
   // add dom node
@@ -326,7 +368,8 @@ requestIdleCallback(workLoop);
 
 const Chaos = {
   createElement,
-  render
+  render,
+  useState,
 };
 
 export default Chaos;

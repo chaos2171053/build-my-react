@@ -4,7 +4,7 @@ import Chaos from './Chaos';
 
 const container = document.getElementById("root");
 
-
+// feature 1: host component
 // const updateValue = e => {
 //   rerender(e.target.value);
 // };
@@ -19,22 +19,37 @@ const container = document.getElementById("root");
 // };
 // rerender("World");
 
-// function component
 
-function Text() {
-  return (
-    <div>666</div>
-  );
-}
 
-function App(props) {
+// feature 2: function component
+// function Text() {
+//   return (
+//     <div>666</div>
+//   );
+// }
+
+// function App(props) {
+//   return (
+//     <div>
+//       <h1>Hi {props.name}</h1>
+//       <Text />
+//     </div>
+//   )
+//     ;
+// }
+// const element = <App name="chaos" />;
+// Chaos.render(element, container);
+
+// feature 3: hooks
+
+function Counter() {
+  const [state, setState] = Chaos.useState(1);
   return (
     <div>
-      <h1>Hi {props.name}</h1>
-      <Text />
+      <h1>Count: {state}</h1>
+      <button onClick={() => setState(c => c + 1)}>Click Me</button>
     </div>
-  )
-    ;
+  );
 }
-const element = <App name="chaos" />;
+const element = <Counter />;
 Chaos.render(element, container);

@@ -175,7 +175,7 @@ function workLoop(deadline) {
   requestIdleCallback(workLoop);
 }
 
-
+// render phase
 function reconcileChildren(wipFiber, elements) {
 
   let oldFiber =

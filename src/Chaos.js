@@ -285,7 +285,7 @@ function useState(initial) {
   };
 
   const actions = oldHook ? oldHook.queue : [];
-
+  // 多次 setState，最后渲染还是只有一次
   actions.forEach(action => {
     hook.state = action(hook.state);
   });

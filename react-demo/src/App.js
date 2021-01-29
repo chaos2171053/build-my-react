@@ -1,15 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  const Test = React.createElement(
-    "h1", { className: "main" }, "Hello World"
-  );
-  return (
-    <div className="App">
-    </div>
-  );
-}
+// export default function App() {
+//   const Test = React.createElement(
+//     "h1", { className: "main" }, "Hello World"
+//   );
+//   return (
+//     <div className="App">
+//     </div>
+//   );
+// }
+export default class Greeting extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: 'world'
+    };
+  }
+  componentDidMount() {
+    console.log(123);
 
-export default App;
+  }
+  render() {
+    return <h1>Hello, {this.state.name}</h1>;
+  }
+}

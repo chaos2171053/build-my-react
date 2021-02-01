@@ -2,13 +2,15 @@ import React from 'react';
 import './App.css';
 
 // import ReactChildrenDemo from './demo/ReactChildrenDemo.jsx';
-import ReactMemoDemo from './demo/ReactMemoDemo.jsx';
+// import ReactMemoDemo from './demo/ReactMemoDemo.jsx';
+import CloneElementDemo from './demo/CloneElementDemo.jsx';
 
 export default function App() {
   return (
     <>
       {/* <ReactChildrenDemo /> */}
-      <ReactMemoDemo />
+      {/* <ReactMemoDemo /> */}
+      <CloneElementDemo />
     </>
   );
 }

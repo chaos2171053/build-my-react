@@ -1,3 +1,4 @@
+import React from 'react';
 export default class Greeting extends React.Component {
   static defaultProps = {
     name: null,

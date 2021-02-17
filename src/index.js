@@ -1,6 +1,16 @@
 import React from 'react';
 import Chaos from './Chaos';
+import Promise from './lib/index';
 
+const myPromise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject('error');
+  }, 300);
+});
+
+errormyPromise.catch(err => {
+  console.log(err);
+});
 
 const container = document.getElementById("root");
 

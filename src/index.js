@@ -8,7 +8,7 @@ const myPromise = new Promise((resolve, reject) => {
   }, 300);
 });
 
-errormyPromise.catch(err => {
+myPromise.catch(err => {
   console.log(err);
 });
 

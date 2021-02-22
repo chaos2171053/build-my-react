@@ -4,7 +4,8 @@ import './App.css';
 // import ReactChildrenDemo from './demo/ReactChildrenDemo.jsx';
 // import ReactMemoDemo from './demo/ReactMemoDemo.jsx';
 // import CloneElementDemo from './demo/CloneElementDemo.jsx';
-import ReactChildrenForeach from './demo/ReactChildrenForeach.jsx';
+// import ReactChildrenForeach from './demo/ReactChildrenForeach.jsx';
+import ReactCreateRef from './demo/ReactCreateRef';
 
 export default function App() {
   return (
@@ -12,7 +13,8 @@ export default function App() {
       {/* <ReactChildrenDemo /> */}
       {/* <ReactMemoDemo /> */}
       {/* <CloneElementDemo /> */}
-      <ReactChildrenForeach />
+      {/* <ReactChildrenForeach /> */}
+      <ReactCreateRef />
     </>
   );
 }

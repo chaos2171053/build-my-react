@@ -2,14 +2,16 @@ import React from 'react';
 import Chaos from './Chaos';
 import Promise from './lib/index';
 
-const myPromise = new Promise((resolve, reject) => {
-  setTimeout(() => {
-    reject('error');
-  }, 300);
+const promise1 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 500, 'one');
 });
 
-myPromise.catch(err => {
-  console.log(err);
+const promise2 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, 'two');
+});
+Promise.race([promise1, promise2]).then((value) => {
+  console.log(value);
+  // Both resolve, but promise2 is faster
 });
 
 const container = document.getElementById("root");

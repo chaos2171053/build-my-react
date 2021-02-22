@@ -5,7 +5,10 @@ import './App.css';
 // import ReactMemoDemo from './demo/ReactMemoDemo.jsx';
 // import CloneElementDemo from './demo/CloneElementDemo.jsx';
 // import ReactChildrenForeach from './demo/ReactChildrenForeach.jsx';
-import ReactCreateRef from './demo/ReactCreateRef';
+// import ReactCreateRef from './demo/ReactCreateRef';
+// import ReactForwardRef from './demo/ReactForwardRef';
+
+import ReactLazyImport from './demo/ReactLazyImport';
 
 export default function App() {
   return (
@@ -14,7 +17,9 @@ export default function App() {
       {/* <ReactMemoDemo /> */}
       {/* <CloneElementDemo /> */}
       {/* <ReactChildrenForeach /> */}
-      <ReactCreateRef />
+      {/* <ReactCreateRef /> */}
+      {/* <ReactForwardRef /> */}
+      <ReactLazyImport />
     </>
   );
 }

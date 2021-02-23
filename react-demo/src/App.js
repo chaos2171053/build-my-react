@@ -8,7 +8,10 @@ import './App.css';
 // import ReactCreateRef from './demo/ReactCreateRef';
 // import ReactForwardRef from './demo/ReactForwardRef';
 
-import ReactLazyImport from './demo/ReactLazyImport';
+// import ReactLazyImport from './demo/ReactLazyImport';
+
+
+import FindDOMNode from './demo/FindDOMNode.jsx';
 
 export default function App() {
   return (
@@ -19,7 +22,8 @@ export default function App() {
       {/* <ReactChildrenForeach /> */}
       {/* <ReactCreateRef /> */}
       {/* <ReactForwardRef /> */}
-      <ReactLazyImport />
+      {/* <ReactLazyImport /> */}
+      <FindDOMNode />
     </>
   );
 }

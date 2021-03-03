@@ -7,11 +7,10 @@ import './App.css';
 // import ReactChildrenForeach from './demo/ReactChildrenForeach.jsx';
 // import ReactCreateRef from './demo/ReactCreateRef';
 // import ReactForwardRef from './demo/ReactForwardRef';
-
 // import ReactLazyImport from './demo/ReactLazyImport';
+// import FindDOMNode from './demo/FindDOMNode.jsx';
 
-
-import FindDOMNode from './demo/FindDOMNode.jsx';
+import CreatePotalDemo from './demo/CreatePotalDemo.jsx';
 
 export default function App() {
   return (
@@ -23,7 +22,8 @@ export default function App() {
       {/* <ReactCreateRef /> */}
       {/* <ReactForwardRef /> */}
       {/* <ReactLazyImport /> */}
-      <FindDOMNode />
+      {/* <FindDOMNode /> */}
+      <CreatePotalDemo />
     </>
   );
 }
